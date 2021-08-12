@@ -113,6 +113,7 @@ ulimit -n 10048
 service 3proxy start
 EOF
 
+chmod +x ${WORKDIR}/boot_*.sh /etc/rc.local
 bash /etc/rc.local
 
 gen_proxy_file_for_user
