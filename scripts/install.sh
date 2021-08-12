@@ -74,6 +74,7 @@ EOF
 }
 
 # run `ifconifg -a` to get eth device name to replace ens3
+# or https://superuser.com/questions/203272/list-only-the-device-names-of-all-available-network-interfaces
 gen_ifconfig() {
     cat <<EOF
 $(awk -F "/" '{print "ifconfig ens3 inet6 add " $5 "/64"}' ${WORKDATA})
