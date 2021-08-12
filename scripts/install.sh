@@ -73,6 +73,7 @@ gen_iptables() {
 EOF
 }
 
+# run `ifconifg -a` to get eth device name to replace ens3
 gen_ifconfig() {
     cat <<EOF
 $(awk -F "/" '{print "ifconfig ens3 inet6 add " $5 "/64"}' ${WORKDATA})
