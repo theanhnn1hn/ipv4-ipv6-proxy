@@ -77,7 +77,7 @@ EOF
 # or https://superuser.com/questions/203272/list-only-the-device-names-of-all-available-network-interfaces
 gen_ifconfig() {
     cat <<EOF
-$(awk -F "/" '{print "ifconfig ens3 inet6 add " $5 "/64"}' ${WORKDATA})
+$(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
 echo "installing apps"
