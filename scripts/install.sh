@@ -26,6 +26,7 @@ install_3proxy() {
 }
 
 gen_3proxy() {
+# users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
     cat <<EOF
 daemon
 maxconn 1000
@@ -36,7 +37,7 @@ setuid 65535
 flush
 auth strong
 
-users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
+users smile:girl
 
 $(awk -F "/" '{print "auth strong\n" \
 "allow " $1 "\n" \
