@@ -114,9 +114,9 @@ bash ${WORKDIR}/boot_ifconfig.sh
 ulimit -n 10048
 service 3proxy start
 
-systemctl stop firewalld
-systemctl disable firewalld
-systemctl disable firewalld.service
+# systemctl stop firewalld
+# systemctl disable firewalld
+# systemctl disable firewalld.service
 EOF
 
 chmod +x ${WORKDIR}/boot_*.sh /etc/rc.local
