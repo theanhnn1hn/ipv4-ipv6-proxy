@@ -62,8 +62,9 @@ upload_proxy() {
 
 }
 gen_data() {
+	# echo "usr$(random)/pass$(random)/$IP4/$port/$(gen64 $IP6)"
     seq $FIRST_PORT $LAST_PORT | while read port; do
-        echo "usr$(random)/pass$(random)/$IP4/$port/$(gen64 $IP6)"
+        echo "smile/girl/$IP4/$port/$(gen64 $IP6)"
     done
 }
 
@@ -95,7 +96,7 @@ IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
-echo "How many proxy do you want to create? Example 500"
+echo "How many proxy do you want to create? Example 500 Max 50000"
 read COUNT
 
 FIRST_PORT=10000
@@ -111,7 +112,7 @@ gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
 cat >>/etc/rc.local <<EOF
 bash ${WORKDIR}/boot_iptables.sh
 bash ${WORKDIR}/boot_ifconfig.sh
-ulimit -n 10048
+ulimit -n 50000
 service 3proxy start
 
 # systemctl stop firewalld
