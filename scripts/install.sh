@@ -83,7 +83,7 @@ $(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
 echo "installing apps"
-yum -y install gcc net-tools bsdtar zip >/dev/null
+yum -y install gcc net-tools bsdtar zip wget >/dev/null
 
 install_3proxy
 
