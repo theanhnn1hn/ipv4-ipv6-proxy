@@ -37,7 +37,7 @@ setuid 65535
 flush
 auth strong
 
-users smile:girl
+users smile:CL:girl
 
 $(awk -F "/" '{print "auth strong\n" \
 "allow " $1 "\n" \
