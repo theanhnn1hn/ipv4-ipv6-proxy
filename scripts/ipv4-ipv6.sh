@@ -186,12 +186,12 @@ EOF
 chmod +x /etc/rc.local
 bash /etc/rc.local
 
-PROXYFILE=$WORKDIR/proxy.txt
+PROXYFILE=proxy.txt
 gen_proxy_file >$PROXYFILE
 eecho "Done with $PROXYFILE"
 
 cd $WORKDIR
-zip --password $PROXYPASS proxy.zip proxy.txt
+zip --password $PROXYPASS proxy.zip $PROXYFILE
 URL=$(curl -s --upload-file proxy.zip https://transfer.sh/proxy.zip)
 
 eecho "Proxy is ready! Format IP:PORT:LOGIN:PASS"
