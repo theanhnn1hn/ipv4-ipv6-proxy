@@ -11,6 +11,12 @@ gen64() {
 	}
 	echo "$1:$(ip64):$(ip64):$(ip64):$(ip64)"
 }
+gen112() {
+	ip112() {
+		echo "${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}${array[$RANDOM % 16]}"
+	}
+	echo "$1::$(ip112):$(ip112)"
+}
 install_3proxy() {
     echo "installing 3proxy"
     URL="https://github.com/z3APA3A/3proxy/archive/3proxy-0.8.6.tar.gz"
@@ -65,7 +71,7 @@ upload_proxy() {
 gen_data() {
 	# echo "usr$(random)/pass$(random)/$IP4/$port/$(gen64 $IP6)"
     seq $FIRST_PORT $LAST_PORT | while read port; do
-        echo "smile/girl/$IP4/$port/$(gen64 $IP6)"
+        echo "smile/girl/$IP4/$port/$(gen112 $IP6)"
     done
 }
 
