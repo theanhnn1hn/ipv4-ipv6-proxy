@@ -133,7 +133,7 @@ gen_3proxy() {
 # users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
     cat <<EOF
 daemon
-maxconn 1000
+maxconn 250
 nscache 65536
 timeouts 1 5 30 60 180 1800 15 60
 setgid 65535
