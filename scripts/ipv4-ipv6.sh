@@ -190,7 +190,8 @@ PROXYFILE=$WORKDIR/proxy.txt
 gen_proxy_file >$PROXYFILE
 eecho "Done with $PROXYFILE"
 
-zip --password $PROXYPASS proxy.zip $PROXYFILE
+cd $WORKDIR
+zip --password $PROXYPASS proxy.zip proxy.txt
 URL=$(curl -s --upload-file proxy.zip https://transfer.sh/proxy.zip)
 
 eecho "Proxy is ready! Format IP:PORT:LOGIN:PASS"
