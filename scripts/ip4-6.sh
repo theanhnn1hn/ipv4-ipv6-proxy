@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# sudo bash <(curl -s "https://raw.githubusercontent.com/MohistAttack/ipv4-ipv6-proxy/master/scripts/ipv4-ipv6.sh")
+# bash <(curl -s "https://raw.githubusercontent.com/MohistAttack/ipv4-ipv6-proxy/master/scripts/ip4-6.sh")
 
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
@@ -165,11 +165,11 @@ install_3proxy
 # ###################
 WORKDIR="/usr/local/3proxy/installer"
 WORKDATA="${WORKDIR}/data.txt"
-mkdir $WORKDIR && cd $_
+mkdir -p $WORKDIR && cd $_
 eecho "Working folder = $WORKDIR"
 
 gen_data >$WORKDATA
-gen_3proxy >/usr/local/3proxy/3proxy.cfg
+gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 
@@ -187,7 +187,7 @@ chmod +x ${WORKDIR}/boot_*.sh
 
 # qxF match whole line , we dont need it
 grep -qxF "bash $BOOTRCFILE" /etc/rc.local || cat >>/etc/rc.local <<EOF 
-"bash $BOOTRCFILE"
+bash $BOOTRCFILE
 EOF
 chmod +x /etc/rc.local
 bash /etc/rc.local
