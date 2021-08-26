@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# bash <(curl -s "https://raw.githubusercontent.com/MohistAttack/ipv4-ipv6-proxy/master/scripts/ip4-6.sh")
+# sudo bash <(curl -s "https://raw.githubusercontent.com/MohistAttack/ipv4-ipv6-proxy/master/scripts/ipv4-ipv6.sh")
 
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
@@ -128,7 +128,6 @@ install_3proxy() {
 # https://3proxy.ru/doc/man3/3proxy.cfg.3.html
 # https://github.com/3proxy/3proxy/blob/master/scripts/3proxy.cfg
 gen_3proxy() {
-# users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
     cat <<EOF
 nscache 65536
 nserver 8.8.8.8
@@ -144,7 +143,7 @@ counter /count/3proxy.3cf
 include /conf/counters
 include /conf/bandlimiters
 
-users $PROXYUSER:CL:$PROXYPASS
+users $(awk -F "/" '{print $1 ":CL:" $2}' ${WORKDATA} | uniq | sed -z 's/\n/ /g')
 
 flush
 
@@ -165,7 +164,7 @@ install_3proxy
 # ###################
 WORKDIR="/usr/local/3proxy/installer"
 WORKDATA="${WORKDIR}/data.txt"
-mkdir -p $WORKDIR && cd $_
+mkdir -p $WORKDIR
 eecho "Working folder = $WORKDIR"
 
 gen_data >$WORKDATA
