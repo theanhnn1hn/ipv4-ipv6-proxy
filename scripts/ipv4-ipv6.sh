@@ -127,6 +127,10 @@ install_3proxy() {
 
 # https://3proxy.ru/doc/man3/3proxy.cfg.3.html
 # https://github.com/3proxy/3proxy/blob/master/scripts/3proxy.cfg
+
+# log /logs/3proxy-%y%m%d.log D
+# rotate 30
+
 gen_3proxy() {
     cat <<EOF
 nscache 65536
@@ -136,8 +140,6 @@ nserver 8.8.4.4
 config /conf/3proxy.cfg
 monitor /conf/3proxy.cfg
 
-log /logs/3proxy-%y%m%d.log D
-rotate 30
 counter /count/3proxy.3cf
 
 include /conf/counters
