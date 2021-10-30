@@ -36,14 +36,17 @@ while [[ $IP6 != *:* ]] || [ ! -n "$IP6" ]; do
   read IP6
 done
 
-while [[ $IP6PREFIXLEN -ne 64 ]] && [[ $IP6PREFIXLEN -ne 112 ]]; do
-    eecho "Please input prefixlen for IPv6: (64/112, 112 as default)"
+while [[ $IP6PREFIXLEN -ne 48 ]] && [[ $IP6PREFIXLEN -ne 64 ]] && [[ $IP6PREFIXLEN -ne 112 ]]; do
+    eecho "Please input prefixlen for IPv6: (48/64/112, 112 as default)"
     read IP6PREFIXLEN
     if [ ! $IP6PREFIXLEN ]; then
         IP6PREFIXLEN=112
     fi
 done
 
+if [ $IP6PREFIXLEN -eq 48 ]; then
+    IP6PREFIX=$(echo $IP6 | cut -f1-3 -d':')
+fi
 if [ $IP6PREFIXLEN -eq 64 ]; then
     IP6PREFIX=$(echo $IP6 | cut -f1-4 -d':')
 fi
@@ -92,6 +95,9 @@ gen_data() {
         fi
         if [[ $IP6PREFIXLEN -eq 64 ]]; then
             echo "$PROXYUSER/$PROXYPASS/$IP4/$port/$IP6PREFIX:$(ip64):$(ip64):$(ip64):$(ip64)"
+        fi
+         if [[ $IP6PREFIXLEN -eq 48 ]]; then
+            echo "$PROXYUSER/$PROXYPASS/$IP4/$port/$IP6PREFIX:$(ip64):$(ip64):$(ip64):$(ip64):$(ip64)"
         fi
     done
 }
