@@ -21,7 +21,7 @@ done
 
 while [ ! -n "$STATIC" ]; do
     eecho "Do you want to use static mode: (yes/no, no as default)"
-    read STATIC;
+    read STATIC
     if [[ $STATIC == "" ]] || [[ $STATIC == "n" ]]; then
         STATIC="no"
     else
@@ -220,7 +220,7 @@ chmod +x ${WORKDIR}/boot_*.sh
 
 
 # change ulimit for too many open files
-grep -qxF '* soft nofile 1024000' /etc/security/limits.conf || cat >>/etc/security/limits.conf << "EOF" 
+grep -qxF '* soft nofile 1024000' /etc/security/limits.conf || cat >>/etc/security/limits.conf <<EOF 
 
 * soft nofile 1024000
 * hard nofile 1024000
@@ -243,5 +243,3 @@ URL=$(curl -s --upload-file proxy.zip http://transfer.sh/smile.zip)
 eecho "Proxy is ready! Format IP:PORT:LOGIN:PASS"
 eecho "Download zip archive from: ${URL}"
 eecho "Password: ${PROXYPASS}"
-
-
