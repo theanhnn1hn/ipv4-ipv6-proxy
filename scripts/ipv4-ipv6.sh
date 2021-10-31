@@ -21,7 +21,7 @@ done
 
 while [ ! -n "$STATIC" ]; do
     eecho "Do you want to use static mode: (yes/no, no as default)"
-    read STATIC
+    read STATIC;
     if [[ $STATIC == "" ]] || [[ $STATIC == "n" ]]; then
         STATIC="no"
     else
