@@ -218,6 +218,14 @@ systemctl restart 3proxy
 EOF
 chmod +x ${WORKDIR}/boot_*.sh
 
+
+# change ulimit for too many open files
+grep -qxF '* soft nofile 1024000' /etc/security/limits.conf || cat >>/etc/security/limits.conf << "EOF" 
+
+* soft nofile 1024000
+* hard nofile 1024000
+EOF
+
 # qxF match whole line
 grep -qxF "bash $BOOTRCFILE" /etc/rc.local || cat >>/etc/rc.local <<EOF 
 bash $BOOTRCFILE
