@@ -14,21 +14,6 @@ eecho() {
     echo -e "${GREEN}$1${NC}"
 }
 
-while [ ! $PROXYCOUNT ] || [[ $PROXYCOUNT -lt 1 ]] || [[ $PROXYCOUNT -gt 10000 ]]; do
-    eecho "How many proxy do you want to create? 1-10000"
-    read PROXYCOUNT
-done
-
-while [ ! -n "$STATIC" ]; do
-    eecho "Do you want to use static mode: (yes/no, no as default)"
-    read STATIC
-    if [[ $STATIC == "" ]] || [[ $STATIC == "n" ]]; then
-        STATIC="no"
-    else
-        STATIC="yes"
-    fi
-done
-
 eecho "Getting IPv4 ..."
 IP4=$(curl -4 -s icanhazip.com -m 10)
 
@@ -46,8 +31,25 @@ if [ ! -n "$IP4" ]; then
 fi
 
 while [[ $IP6 != *:* ]] || [ ! -n "$IP6" ]; do
-  eecho "Invalid IPv6, Please input it manually:"
-  read IP6
+    eecho "IPv6 Nout Found, Please check environment. Exit"
+    exit
+#   eecho "Invalid IPv6, Please input it manually:"
+#   read IP6
+done
+
+while [ ! $PROXYCOUNT ] || [[ $PROXYCOUNT -lt 1 ]] || [[ $PROXYCOUNT -gt 10000 ]]; do
+    eecho "How many proxy do you want to create? 1-10000"
+    read PROXYCOUNT
+done
+
+while [ ! -n "$STATIC" ]; do
+    eecho "Do you want to use static mode: (yes/no, no as default)"
+    read STATIC
+    if [[ $STATIC == "" ]] || [[ $STATIC == "n" ]]; then
+        STATIC="no"
+    else
+        STATIC="yes"
+    fi
 done
 
 while [[ $IP6PREFIXLEN -ne 48 ]] && [[ $IP6PREFIXLEN -ne 64 ]] && [[ $IP6PREFIXLEN -ne 112 ]]; do
