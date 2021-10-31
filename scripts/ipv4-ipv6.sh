@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# centos 7.5
 # bash <(curl -s "https://raw.githubusercontent.com/MohistAttack/ipv4-ipv6-proxy/master/scripts/ipv4-ipv6.sh")
 
 GREEN='\033[0;32m'
@@ -16,6 +17,16 @@ eecho() {
 while [ ! $PROXYCOUNT ] || [[ $PROXYCOUNT -lt 1 ]] || [[ $PROXYCOUNT -gt 10000 ]]; do
     eecho "How many proxy do you want to create? 1-10000"
     read PROXYCOUNT
+done
+
+while [ ! -n "$STATIC" ]; do
+    eecho "Do you want to use static mode: (yes/no, no as default)"
+    read STATIC
+    if [[ $STATIC == "" ]] || [[ $STATIC == "n" ]]; then
+        STATIC="no"
+    else
+        STATIC="yes"
+    fi
 done
 
 IP4=$(curl -4 -s icanhazip.com)
@@ -114,6 +125,13 @@ $(awk -v ETHNAME="$ETHNAME" -v IP6PREFIXLEN="$IP6PREFIXLEN" -F "/" '{print "ifco
 EOF
 }
 
+gen_static() {
+    NETWORK_FILE="/etc/sysconfig/network-scripts/ifcfg-$ETHNAME"
+    cat <<EOF
+    sed -i '/^IPV6ADDR_SECONDARIES/d' $NETWORK_FILE && echo 'IPV6ADDR_SECONDARIES="$(awk -v IP6PREFIXLEN="$IP6PREFIXLEN" -F "/" '{print $5 "/" IP6PREFIXLEN}' ${WORKDATA} | sed -z 's/\n/ /g')"' >> $NETWORK_FILE
+EOF
+}
+
 gen_proxy_file() {
     cat <<EOF
 $(awk -F "/" '{print $3 ":" $4 ":" $1 ":" $2 }' ${WORKDATA})
@@ -136,6 +154,7 @@ install_3proxy() {
 
 # log /logs/3proxy-%y%m%d.log D
 # rotate 30
+# if need , please add before cmd: counter /count/3proxy.3cf 
 
 gen_3proxy() {
     cat <<EOF
@@ -179,11 +198,18 @@ gen_data >$WORKDATA
 gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+gen_static >$WORKDIR/boot_static.sh
 
 BOOTRCFILE="$WORKDIR/boot_rc.sh"
+
+REGISTER_LOGIC="bash ${WORKDIR}/boot_ifconfig.sh"
+if [[ $STATIC == "yes" ]]; then
+    REGISTER_LOGIC="bash ${WORKDIR}/boot_static.sh && systemctl restart network"
+fi
+
 cat >$BOOTRCFILE <<EOF
 bash ${WORKDIR}/boot_iptables.sh
-bash ${WORKDIR}/boot_ifconfig.sh
+${REGISTER_LOGIC}
 systemctl restart 3proxy
 
 # systemctl stop firewalld
@@ -192,7 +218,7 @@ systemctl restart 3proxy
 EOF
 chmod +x ${WORKDIR}/boot_*.sh
 
-# qxF match whole line , we dont need it
+# qxF match whole line
 grep -qxF "bash $BOOTRCFILE" /etc/rc.local || cat >>/etc/rc.local <<EOF 
 bash $BOOTRCFILE
 EOF
