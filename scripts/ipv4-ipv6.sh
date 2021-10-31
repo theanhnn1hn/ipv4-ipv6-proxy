@@ -29,7 +29,10 @@ while [ ! -n "$STATIC" ]; do
     fi
 done
 
+eecho "Getting IPv4 ..."
 IP4=$(curl -4 -s icanhazip.com)
+
+eecho "Getting IPv6 ..."
 IP6=$(curl -6 -s icanhazip.com)
 if [[ $IP6 != *:* ]]; then
   IP6=
