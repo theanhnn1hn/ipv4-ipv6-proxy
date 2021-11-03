@@ -78,7 +78,7 @@ if [[ $INCTAIL == "yes" ]]; then
     while [ ! -n "$INCTAILSTEPS" ]; do
         eecho "How many steps do you want for [increasing tail] way: (1 as default)"
         read INCTAILSTEPS
-        if [ $INCTAILSTEPS -lt 1 ]; then
+        if [[ $INCTAILSTEPS -lt 1 ]]; then
             INCTAILSTEPS=1
         fi
     done
