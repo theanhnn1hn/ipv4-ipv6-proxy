@@ -60,14 +60,39 @@ while [[ $IP6PREFIXLEN -ne 48 ]] && [[ $IP6PREFIXLEN -ne 64 ]] && [[ $IP6PREFIXL
     fi
 done
 
-if [ $IP6PREFIXLEN -eq 48 ]; then
-    IP6PREFIX=$(echo $IP6 | cut -f1-3 -d':')
+if [[ $IP6PREFIXLEN -eq 112 ]]; then
+    INCTAIL="yes"
+else
+    while [ ! -n "$INCTAIL" ]; do
+        eecho "Do you want to use [increasing tail] way to generate addresses: (yes/no, no as default)"
+        read INCTAIL
+        if [[ $INCTAIL == "" ]] || [[ $INCTAIL == "n" ]]; then
+            INCTAIL="no"
+        else
+            INCTAIL="yes"
+        fi
+    done
 fi
-if [ $IP6PREFIXLEN -eq 64 ]; then
-    IP6PREFIX=$(echo $IP6 | cut -f1-4 -d':')
+
+if [[ $INCTAIL == "yes" ]]; then
+    while [ ! -n "$INCTAILSTEPS" ]; do
+        eecho "How many steps do you want for [increasing tail] way: (1 as default)"
+        read INCTAILSTEPS
+        if [ $INCTAILSTEPS -lt 1 ]; then
+            INCTAILSTEPS=1
+        fi
+    done
 fi
-if [ $IP6PREFIXLEN -eq 112 ]; then
+
+if [[ $INCTAIL == "yes" ]]; then
     IP6PREFIX=$(echo $IP6 | rev | cut -f2- -d':' | rev)
+else
+    if [ $IP6PREFIXLEN -eq 48 ]; then
+        IP6PREFIX=$(echo $IP6 | cut -f1-3 -d':')
+    fi
+    if [ $IP6PREFIXLEN -eq 64 ]; then
+        IP6PREFIX=$(echo $IP6 | cut -f1-4 -d':')
+    fi
 fi
 eecho "IPv6 PrefixLen: $IP6PREFIXLEN --> Prefix: $IP6PREFIX"
 
@@ -104,16 +129,17 @@ gen_data() {
 
     seq 1 $PROXYCOUNT | while read idx; do
         port=$(($idx+10000))
-        if [[ $IP6PREFIXLEN -eq 112 ]]; then
-            suffix=$(($idx+1))
+        if [[ $INCTAIL == "yes" ]] ; then
+            suffix=$((($idx)*$INCTAILSTEPS))
             suffix=$(printf '%x\n' $suffix)
             echo "$PROXYUSER/$PROXYPASS/$IP4/$port/$IP6PREFIX:$suffix"
-        fi
-        if [[ $IP6PREFIXLEN -eq 64 ]]; then
-            echo "$PROXYUSER/$PROXYPASS/$IP4/$port/$IP6PREFIX:$(ip64):$(ip64):$(ip64):$(ip64)"
-        fi
-         if [[ $IP6PREFIXLEN -eq 48 ]]; then
-            echo "$PROXYUSER/$PROXYPASS/$IP4/$port/$IP6PREFIX:$(ip64):$(ip64):$(ip64):$(ip64):$(ip64)"
+        else
+            if [[ $IP6PREFIXLEN -eq 64 ]]; then
+                echo "$PROXYUSER/$PROXYPASS/$IP4/$port/$IP6PREFIX:$(ip64):$(ip64):$(ip64):$(ip64)"
+            fi
+            if [[ $IP6PREFIXLEN -eq 48 ]]; then
+                echo "$PROXYUSER/$PROXYPASS/$IP4/$port/$IP6PREFIX:$(ip64):$(ip64):$(ip64):$(ip64):$(ip64)"
+            fi
         fi
     done
 }
