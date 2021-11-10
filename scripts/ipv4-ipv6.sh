@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # centos 7.5
-# bash <(curl -s "https://raw.githubusercontent.com/MohistAttack/ipv4-ipv6-proxy/master/scripts/ipv4-ipv6.sh")
+# bash <(curl -s -H 'Pragma: no-cache' -H 'Cache-Control: no-cache' "https://raw.githubusercontent.com/MohistAttack/ipv4-ipv6-proxy/master/scripts/ipv4-ipv6.sh")
 
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
@@ -45,10 +45,10 @@ done
 while [ ! -n "$STATIC" ]; do
     eecho "Do you want to use static mode: (yes/no, no as default)"
     read STATIC
-    if [[ $STATIC == "" ]] || [[ $STATIC == "n" ]]; then
-        STATIC="no"
-    else
+    if [[ $STATIC == "y" ]] || [[ $STATIC == "yes" ]]; then
         STATIC="yes"
+    else
+        STATIC="no"
     fi
 done
 
@@ -66,10 +66,10 @@ else
     while [ ! -n "$INCTAIL" ]; do
         eecho "Do you want to use [increasing tail] way to generate addresses: (yes/no, no as default)"
         read INCTAIL
-        if [[ $INCTAIL == "" ]] || [[ $INCTAIL == "n" ]]; then
-            INCTAIL="no"
-        else
+        if [[ $INCTAIL == "y" ]] || [[ $INCTAIL == "yes" ]]; then
             INCTAIL="yes"
+        else
+            INCTAIL="no"
         fi
     done
 fi
