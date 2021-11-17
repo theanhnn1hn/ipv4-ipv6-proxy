@@ -233,7 +233,7 @@ gen_static >$WORKDIR/boot_static.sh
 
 BOOTRCFILE="$WORKDIR/boot_rc.sh"
 
-REGISTER_LOGIC="bash ${WORKDIR}/boot_ifconfig.sh"
+REGISTER_LOGIC="systemctl restart network && bash ${WORKDIR}/boot_ifconfig.sh"
 if [[ $STATIC == "yes" ]]; then
     REGISTER_LOGIC="bash ${WORKDIR}/boot_static.sh && systemctl restart network"
 fi
