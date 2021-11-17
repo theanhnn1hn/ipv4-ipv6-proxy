@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# centos 7
+# bash <(curl -s "https://raw.githubusercontent.com/MohistAttack/ipv4-ipv6-proxy/master/scripts/enable-ipv6.sh?r=$RANDOM")
+
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
 BLUE='\033[0;34m'
@@ -11,15 +14,13 @@ eecho() {
     echo -e "${GREEN}$1${NC}"
 }
 
-# centos 7
-
 eecho "Getting IPv6 ..."
 IP6=$(curl -6 -s icanhazip.com -m 10)
 if [[ $IP6 != *:* ]]; then
   IP6=
 fi
 
-if [ ! -n "$IP6" ]; then
+if [ -n "$IP6" ]; then
     eecho "IPv6 = ${IP6}"
     echo -e "${RED}IPv6 Already Enbaled!${NC}"
     exit
